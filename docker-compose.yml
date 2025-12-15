@@ -1,0 +1,22 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: "1000:1000"
+    ports:
+      - 8096:8096/tcp
+      - 7359:7359/udp
+    volumes:
+      - ${JELLYFIN_CONFIG}:/etc/jellyfin
+      - ${JELLYFIN_CACHE}:/cache
+      - ${JELLYFIN_DATA}:/var/lib/jellyfin
+      - ${MEDIA_MOVIES}:/media/Movies:ro
+      - ${MEDIA_SHOWS}:/media/Shows:ro
+    restart: 'unless-stopped'
+    environment:
+      - JELLYFIN_CONFIG_DIR=/etc/jellyfin
+      - JELLYFIN_DATA_DIR=/var/lib/jellyfin
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PublishedServerUrl}
+      - TZ=${TZ}
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
